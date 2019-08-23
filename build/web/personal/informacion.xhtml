@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- ui:composition permite utilizar un archivo xhtml como plantilla. en template se pone la ruta de la plantilla.-->
+<ui:composition template="/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title-jr">
+        <title>Personal - Datos</title>
+    </ui:define>
+    <ui:define name="body-jr">
+        <h:form id="formIngeniero">
+            <!-- Mensaje que se actualiza con la la excepciones -->
+            <p:messages id="mensajes" showDetail="true"/>
+            <br/>
+            <div align="center"> 
+                <p:panelGrid columns="4" id="panelRegistrarIng">
+                    <h:outputText value="Cedula: "/>
+                    <p:inputText id="txtCedula" 
+                                 binding="#{personalInformacionVista.txtCedula}"
+                                 required="true" 
+                                 requiredMessage="La cedula es obligatoria"/>
+                    <h:outputText value="Nombres:"/>
+                    <p:inputText id="txtNombre" 
+                                 binding="#{personalInformacionVista.txtNombres}"
+                                 required="true" 
+                                 requiredMessage="El Nombre es obligatorio"/>
+
+                    <h:outputText value="Apellidos: "/>
+                    <p:inputText id="txtApellidos" 
+                                 binding="#{personalInformacionVista.txtApellidos}"
+                                 required="true" 
+                                 requiredMessage="El Apellido es obligatorio"/>
+
+                    <h:outputText value="E-mail: "/>
+                    <p:inputText id="txtEmail" 
+                                 binding="#{personalInformacionVista.txtEmail}"
+                                 required="true" 
+                                 requiredMessage=""/>
+
+                    <h:outputText value="Telefono Fijo: "/>
+                    <p:inputText id="txtFijo"
+                                 binding="#{personalInformacionVista.txtTelefonoFijo}"
+                                 />
+
+                    <h:outputText value="Telefono Movil: "/>
+                    <p:inputText id="txtMovil"
+                                 binding="#{personalInformacionVista.txtTelefonoMovil}"
+                                 />
+
+                    <h:outputText value="Direccion: "/>
+                    <p:inputText id="txtDireccion"
+                                 binding="#{personalInformacionVista.txtDireccion}"
+                                 />
+
+                    <h:outputText value="Fecha Nacimiento: "/>
+                    <p:calendar id="fechaNacimiento" 
+                                binding="#{personalInformacionVista.fechaNacimiento}"
+                                value="#{calendarView.fechaNacimiento}" 
+                                pattern="dd-MM-yyyy" 
+                                mask="true" />
+
+                    <h:outputText value="Edad: "/>
+                    <p:inputText id="txtEdad"
+                                 binding="#{personalInformacionVista.txtEdad}"
+                                 required="true"
+                                 requiredMessage=""/>
+
+                    <h:outputText value="Sexo: "/>
+                    <p:selectOneMenu id="cbmSexo" binding="#{personalInformacionVista.cmbSexo}" style="width:100%"  
+                                     filter="true" filterMatchMode="startsWith">
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItem itemLabel="Femenino" itemValue="F" />
+                        <f:selectItem itemLabel="Masculino" itemValue="M" />
+                        <f:selectItem itemLabel="Otro" itemValue="O" />
+                    </p:selectOneMenu>
+
+                    <h:outputText value="Fecha Ingreso "/>
+                    <p:calendar id="fechaIngreso" 
+                                binding="#{personalInformacionVista.fechaIngreso}"
+                                value="#{calendarView.fechaIngreso}" 
+                                pattern="dd-MM-yyyy" 
+                                mask="true" />
+
+                    <h:outputText value="Clase: "/>
+                    <p:selectOneMenu id="cbmClase" binding="#{personalInformacionVista.cmbClase}" style="width:100%"  
+                                     filter="true" filterMatchMode="startsWith">
+                        <f:selectItem itemLabel="Select One" itemValue="" />
+                        <f:selectItem itemLabel="Jefe" itemValue="1" />
+                        <f:selectItem itemLabel="Senior" itemValue="2" />
+                        <f:selectItem itemLabel="Junior" itemValue="3" />
+                    </p:selectOneMenu>
+
+                </p:panelGrid>
+            </div>
+            <br/>
+            <div align="center"> 
+                <!-- Similiar a los campos, en actionListener se indica que metodo será
+                ejecutado cuando el boton es pulsado-->
+
+                <p:commandButton value="Registrar" 
+                                 actionListener="#{personalInformacionVista.registrarIngeniero()}" 
+                                 update=":formIngeniero"/>
+                <p:commandButton value="Editar" 
+                                 actionListener="#"
+                                 update=":formIngeniero"/>   
+                <p:commandButton value="Eliminar" 
+                                 actionListener="#"  
+                                 update=":formIngeniero">
+                    <p:confirm header="Confirmation" 
+                               message="Estas completamente seguro?" 
+                               icon="pi pi-exclamation-triangle" />
+                </p:commandButton>
+
+                <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                    <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                    <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                </p:confirmDialog>
+            </div>
+            <br/>
+
+            <!-- El atributo Value de la tabla hace referencia a la listaContratistas
+                creada en la clase ContratistaVista, esta lista es iterada y cada
+                elemento es almacenado en var="contratista ".
+                
+                Los tres ultimos atributos activan una propiedad de la tabla
+                que permite interactuar con ella. 
+                selection: cuando se seleccionada una tupla de la tabla los datos son almacenados en la variable selectContratista
+                selectionMode:
+                rowKey: llave asignada a cada tupla, en este caso se eligió el codigo del contratista-->
+
+            <p:dataTable var="ingeniero" value="#{informacionVista.listaIngenieros}" rows="10"
+                         paginator="true"
+                         paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15"
+                         >
+                <p:column headerText="Cedula">
+                    <h:outputText value="#{ingeniero.cedula}" />
+                </p:column>
+                <p:column headerText="Nombres">
+                    <h:outputText value="#{ingeniero.nombres}" />
+                </p:column>
+                <p:column headerText="Apellidos">
+                    <h:outputText value="#{ingeniero.apellidos}" />
+                </p:column>
+                <p:column headerText="E-Mail">
+                    <h:outputText value="#{ingeniero.email}" />
+                </p:column>
+                <p:column headerText="Telefono">
+                    <h:outputText value="#{ingeniero.telefonoFijo}" />
+                </p:column>
+                <p:column headerText="Celular">
+                    <h:outputText value="#{ingeniero.telefonoMovil}" />
+                </p:column>
+                <p:column headerText="Direccion">
+                    <h:outputText value="#{ingeniero.direccion}" />
+                </p:column>
+                <p:column headerText="Fecha de Nacimiento">
+                    <h:outputText value="#{ingeniero.fechaNacimiento}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Edad">
+                    <h:outputText value="#{ingeniero.edad}" />
+                </p:column>
+                <p:column headerText="Sexo">
+                    <h:outputText value="#{ingeniero.sexo}" />
+                </p:column>
+                <p:column headerText="Fecha de Ingreso">
+                    <h:outputText value="#{ingeniero.fechaIngreso}">
+                        <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                    </h:outputText>
+                </p:column>
+                <p:column headerText="Clase">
+                    <h:outputText value="#{ingeniero.clase}" />
+                </p:column>
+                <f:facet name="paginatorTopLeft">
+                    <p:commandButton type="button" icon="pi pi-refresh" />
+                </f:facet>
+
+                <f:facet name="paginatorBottomRight">
+                    <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                </f:facet>
+            </p:dataTable>
+            <br/>
+        </h:form>
+    </ui:define>
+</ui:composition>
