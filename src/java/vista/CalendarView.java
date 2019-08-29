@@ -8,6 +8,7 @@ package vista;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
@@ -36,6 +37,7 @@ public class CalendarView {
     private ArrayList<Integer> invalidDays;
     private Date minDate;
     private Date maxDate;
+    private Date fechaTitulo;
 
     public void init() {
         invalidDates = new ArrayList<>();
@@ -80,7 +82,16 @@ public class CalendarView {
     public void setFechaIngreso(Date fechaIngreso) {
         this.fechaIngreso = fechaIngreso;
     }
- 
+
+    public Date getFechaTitulo() {
+        return fechaTitulo;
+    }
+
+    public void setFechaTitulo(Date fechaTitulo) {
+        this.fechaTitulo = fechaTitulo;
+    }
+    
+
     
     
     public List<Date> getMulti() {

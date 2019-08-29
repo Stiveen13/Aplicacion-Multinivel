@@ -30,4 +30,6 @@ public interface SeminariosCursosFacadeLocal {
 
     int count();
     
+    SeminariosCursos findxId(Integer id);
+    
 }

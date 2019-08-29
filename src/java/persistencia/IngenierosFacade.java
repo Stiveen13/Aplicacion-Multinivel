@@ -7,7 +7,9 @@ package persistencia;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import modelo.Ingenieros;
 
 /**
@@ -27,6 +29,17 @@ public class IngenierosFacade extends AbstractFacade<Ingenieros> implements Inge
 
     public IngenierosFacade() {
         super(Ingenieros.class);
+    }
+
+    @Override
+    public Ingenieros findxCedula(Integer cedula) {
+        String consulta = "SELECT i FROM Ingenieros i WHERE i.cedula =  " + cedula;
+        try {
+            Query query = em.createQuery(consulta);
+            return (Ingenieros) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
     
 }

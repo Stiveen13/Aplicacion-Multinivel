@@ -30,4 +30,5 @@ public interface IngenierosFacadeLocal {
 
     int count();
     
+    Ingenieros findxCedula(Integer cedula);
 }

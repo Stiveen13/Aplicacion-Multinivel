@@ -32,4 +32,9 @@ public class IngenieroLogica implements IngenieroLogicaLocal {
     public void registrarIngeniero(Ingenieros ing) throws Exception {
         ingenierosDAO.create(ing);
     }
+
+    @Override
+    public Ingenieros buscarxCedula(Integer cedula) {
+        return ingenierosDAO.findxCedula(cedula);
+    }
 }

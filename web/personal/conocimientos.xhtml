@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- ui:composition permite utilizar un archivo xhtml como plantilla. en template se pone la ruta de la plantilla.-->
+<ui:composition template="/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title-jr">
+        <title>Personal - Datos</title>
+    </ui:define>
+    <ui:define name="body-jr">
+        <h:form id="formConfiguracionEstudios">
+            <!-- Mensaje que se actualiza con la la excepciones -->
+            <p:messages id="mensajes" showDetail="true"/>
+            <!-- El atributo Value de la tabla hace referencia a la listaContratistas
+                creada en la clase ContratistaVista, esta lista es iterada y cada
+                elemento es almacenado en var="contratista ".
+                
+                Los tres ultimos atributos activan una propiedad de la tabla
+                que permite interactuar con ella. 
+                selection: cuando se seleccionada una tupla de la tabla los datos son almacenados en la variable selectContratista
+                selectionMode:
+                rowKey: llave asignada a cada tupla, en este caso se eligió el codigo del contratista-->
+
+            <p:panel id="conocimientos" header="Conocimientos" style="margin-bottom:20px">
+                <div align="center"> 
+                    <p:panelGrid columns="4" id="panelRegistrarConocimiento">
+                        <h:outputText value="Ingeniero: "/>
+                        <p:selectOneMenu id="cmbIngenieros" 
+                                         binding="#{personalConocimientosVista.cmbIngenieros}"
+                                         filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
+                            <f:selectItems value="#{personalConocimientosVista.selectItemIngenieros}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Herramientas: "/>
+                        <p:selectOneMenu id="cmbHerramientas" 
+                                         binding="#{personalConocimientosVista.cmbHerramientas}"
+                                         filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
+                            <f:selectItems value="#{personalConocimientosVista.selectItemHerramientas}" />
+                        </p:selectOneMenu>  
+                    </p:panelGrid>
+                </div>
+                <br/>
+                <div align="center"> 
+                    <!-- Similiar a los campos, en actionListener se indica que metodo será
+                    ejecutado cuando el boton es pulsado-->
+
+                    <p:commandButton value="Registrar" 
+                                     actionListener="#{personalConocimientosVista.registrarConocimiento()}" 
+                                     update=":formConfiguracionEstudios:conocimientos"/>
+                    
+                    <p:commandButton value="Eliminar" 
+                                     actionListener="#"  
+                                     update=":formConfiguracionEstudios:conocimientos">
+                        <p:confirm header="Confirmation" 
+                                   message="Estas completamente seguro?" 
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                    </p:confirmDialog>
+                </div>
+                <br/>
+                <p:dataTable var="conocimiento" value="#{personalConocimientosVista.listaConocimientos}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             >
+                    <p:column headerText="Cedula">
+                        <h:outputText value="#{conocimiento.ingenierosCedula.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{conocimiento.ingenierosCedula.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellido">
+                        <h:outputText value="#{conocimiento.ingenierosCedula.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Conocimiento">
+                        <h:outputText value="#{conocimiento.herramientasId.nombre}" />
+                    </p:column>
+                    <p:column headerText="Tipo">
+                        <h:outputText value="#{conocimiento.herramientasId.tipo}" />
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+            <br/>
+            <p:panel id="seminariosAsistidos" header="Seminarios Asistidos" style="margin-bottom:20px">
+                <div align="center"> 
+                    <p:panelGrid columns="4" id="panelRegistarAsistencia">
+                        <h:outputText value="Ingeniero: "/>
+                        <p:selectOneMenu id="cmbIngenierosSeminiaros" 
+                                         binding="#{personalConocimientosVista.cmbIngenierosSeminarios}"
+                                         filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
+                            <f:selectItems value="#{personalConocimientosVista.selectItemIngenierosSeminarios}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Seminario "/>
+                        <p:selectOneMenu id="cmbSeminarios" 
+                                         binding="#{personalConocimientosVista.cmbSeminarios}"
+                                         filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
+                            <f:selectItems value="#{personalConocimientosVista.selectItemSeminarios}" />
+                        </p:selectOneMenu>  
+                    </p:panelGrid>
+                </div>
+                <br/>
+                <div align="center"> 
+                    <!-- Similiar a los campos, en actionListener se indica que metodo será
+                    ejecutado cuando el boton es pulsado-->
+
+                    <p:commandButton value="Registrar" 
+                                     actionListener="#{personalConocimientosVista.registrarAsistenciaCurso()}"
+                                     update=":formConfiguracionEstudios:seminariosAsistidos"/>
+                     
+                    <p:commandButton value="Eliminar" 
+                                     actionListener="#"  
+                                     update=":formConfiguracionEstudios:seminariosAsistidos">
+                        <p:confirm header="Confirmation" 
+                                   message="Estas completamente seguro?" 
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                    </p:confirmDialog>
+                </div>
+                <br/>
+                <p:dataTable var="seminarioAsistido" value="#{personalConocimientosVista.listaSeminariosAsistidos}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             >
+                    <p:column headerText="Cedula">
+                        <h:outputText value="#{seminarioAsistido.ingenierosCedula.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{seminarioAsistido.ingenierosCedula.nombres}" />
+                    </p:column>
+                    <p:column headerText="Apellido">
+                        <h:outputText value="#{seminarioAsistido.ingenierosCedula.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Seminario">
+                        <h:outputText value="#{seminarioAsistido.seminariosCursosId.nombre}" />
+                    </p:column>
+                    <p:column headerText="Lugar">
+                        <h:outputText value="#{seminarioAsistido.seminariosCursosId.lugar}" />
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

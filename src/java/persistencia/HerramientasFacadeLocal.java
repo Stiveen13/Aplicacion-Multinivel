@@ -30,4 +30,5 @@ public interface HerramientasFacadeLocal {
 
     int count();
     
+    Herramientas buscarxId(Integer id);
 }

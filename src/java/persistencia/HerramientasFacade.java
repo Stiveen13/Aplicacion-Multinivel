@@ -7,8 +7,11 @@ package persistencia;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import modelo.Herramientas;
+import modelo.Ingenieros;
 
 /**
  *
@@ -27,6 +30,17 @@ public class HerramientasFacade extends AbstractFacade<Herramientas> implements 
 
     public HerramientasFacade() {
         super(Herramientas.class);
+    }
+
+    @Override
+    public Herramientas buscarxId(Integer id) {
+        String consulta = "SELECT h FROM Herramientas h WHERE h.id = " + id;
+        try {
+            Query query = em.createQuery(consulta);
+            return (Herramientas) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
     
 }

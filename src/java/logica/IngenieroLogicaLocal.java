@@ -17,4 +17,5 @@ import modelo.Ingenieros;
 public interface IngenieroLogicaLocal {
     public List<Ingenieros> listarIngenieros();
     public void registrarIngeniero(Ingenieros ing) throws Exception;
+    public Ingenieros buscarxCedula(Integer cedula);
 }

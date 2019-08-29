@@ -1,0 +1,82 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- ui:composition permite utilizar un archivo xhtml como plantilla. en template se pone la ruta de la plantilla.-->
+<ui:composition template="/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title-jr">
+        <title>Personal - Datos</title>
+    </ui:define>
+    <ui:define name="body-jr">
+        <h:form id="formConfiguracionEstudios">
+            <!-- Mensaje que se actualiza con la la excepciones -->
+            <p:messages id="mensajes" showDetail="true"/>
+            <br/>
+
+            <!-- El atributo Value de la tabla hace referencia a la listaContratistas
+                creada en la clase ContratistaVista, esta lista es iterada y cada
+                elemento es almacenado en var="contratista ".
+                
+                Los tres ultimos atributos activan una propiedad de la tabla
+                que permite interactuar con ella. 
+                selection: cuando se seleccionada una tupla de la tabla los datos son almacenados en la variable selectContratista
+                selectionMode:
+                rowKey: llave asignada a cada tupla, en este caso se eligió el codigo del contratista-->
+
+            <p:panel id="seminariosCursos" header="Seminarios y Cursos" style="margin-bottom:20px">
+                <p:dataTable var="seminarioCurso" value="#{personalConfiguracionVista.listaSeminariosCursos}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             >
+                    <p:column headerText="Id">
+                        <h:outputText value="#{seminarioCurso.id}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{seminarioCurso.nombre}" />
+                    </p:column>
+                    <p:column headerText="Lugar">
+                        <h:outputText value="#{seminarioCurso.lugar}" />
+                    </p:column>
+                    <p:column headerText="Fecha de Inicio">
+                        <h:outputText value="#{seminarioCurso.fechaInicio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Fecha de Finalizacion">
+                        <h:outputText value="#{seminarioCurso.fechaFinalizacion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                        </h:outputText>
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+            <br/>
+            <p:panel id="herramientas" header="Herramientas" style="margin-bottom:20px">
+                <p:dataTable var="herramienta" value="#{personalConfiguracionVista.listaHerramientas}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             >
+                    <p:column headerText="Id">
+                        <h:outputText value="#{herramienta.id}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{herramienta.nombre}" />
+                    </p:column>
+                    <p:column headerText="Lugar">
+                        <h:outputText value="#{herramienta.tipo}" />
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+        </h:form>
+    </ui:define>
+</ui:composition>

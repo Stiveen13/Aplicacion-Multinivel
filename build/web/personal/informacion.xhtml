@@ -16,7 +16,7 @@
             <p:messages id="mensajes" showDetail="true"/>
             <br/>
             <div align="center"> 
-                <p:panelGrid columns="4" id="panelRegistrarIng">
+                <p:panelGrid columns="6" id="panelRegistrarIng">
                     <h:outputText value="Cedula: "/>
                     <p:inputText id="txtCedula" 
                                  binding="#{personalInformacionVista.txtCedula}"
@@ -92,6 +92,25 @@
                         <f:selectItem itemLabel="Senior" itemValue="2" />
                         <f:selectItem itemLabel="Junior" itemValue="3" />
                     </p:selectOneMenu>
+                    
+                    <h:outputText value="Titulo Obtenido: "/>
+                    <p:inputText id="titulo"
+                                
+                                 required="true"
+                                 requiredMessage=""/>
+                    
+                    <h:outputText value="Institucion: "/>
+                    <p:inputText id="institucion"
+                                 
+                                 required="true"
+                                 requiredMessage=""/>
+                    
+                    <h:outputText value="Fecha Obtencion: "/>
+                    <p:calendar id="fechaObtencion" 
+                                
+                                value="#{calendarView.fechaTitulo}" 
+                                pattern="dd-MM-yyyy" 
+                                mask="true" />
 
                 </p:panelGrid>
             </div>
@@ -131,7 +150,7 @@
                 selectionMode:
                 rowKey: llave asignada a cada tupla, en este caso se eligió el codigo del contratista-->
 
-            <p:dataTable var="ingeniero" value="#{informacionVista.listaIngenieros}" rows="10"
+            <p:dataTable var="ingeniero" value="#{personalInformacionVista.listaIngenieros}" rows="10"
                          paginator="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15"
@@ -145,28 +164,13 @@
                 <p:column headerText="Apellidos">
                     <h:outputText value="#{ingeniero.apellidos}" />
                 </p:column>
-                <p:column headerText="E-Mail">
-                    <h:outputText value="#{ingeniero.email}" />
-                </p:column>
-                <p:column headerText="Telefono">
-                    <h:outputText value="#{ingeniero.telefonoFijo}" />
-                </p:column>
                 <p:column headerText="Celular">
                     <h:outputText value="#{ingeniero.telefonoMovil}" />
-                </p:column>
-                <p:column headerText="Direccion">
-                    <h:outputText value="#{ingeniero.direccion}" />
                 </p:column>
                 <p:column headerText="Fecha de Nacimiento">
                     <h:outputText value="#{ingeniero.fechaNacimiento}">
                         <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
                     </h:outputText>
-                </p:column>
-                <p:column headerText="Edad">
-                    <h:outputText value="#{ingeniero.edad}" />
-                </p:column>
-                <p:column headerText="Sexo">
-                    <h:outputText value="#{ingeniero.sexo}" />
                 </p:column>
                 <p:column headerText="Fecha de Ingreso">
                     <h:outputText value="#{ingeniero.fechaIngreso}">
