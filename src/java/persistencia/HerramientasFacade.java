@@ -42,5 +42,17 @@ public class HerramientasFacade extends AbstractFacade<Herramientas> implements 
             return null;
         }
     }
-    
+
+    @Override
+    public Herramientas buscarxNombre(String nombre) {
+        String consulta = "SELECT h FROM Herramientas h WHERE h.nombre = " + nombre;
+
+        try {
+            Query query = em.createQuery(consulta);
+            return (Herramientas) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }

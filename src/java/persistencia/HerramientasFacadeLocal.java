@@ -31,4 +31,6 @@ public interface HerramientasFacadeLocal {
     int count();
     
     Herramientas buscarxId(Integer id);
+    
+    Herramientas buscarxNombre(String nombre);
 }

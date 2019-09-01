@@ -33,4 +33,38 @@ public class HerramientasLogica implements HerramientasLogicaLocal {
     public Herramientas buscarxId(Integer id) {
         return herramientasDAO.buscarxId(id);
     }
+
+    @Override
+    public void registrarHerramienta(Herramientas nuevaHerramienta) throws Exception {
+        if(nuevaHerramienta.getNombre().equals("")){
+            throw new Exception("El nombre de la herramienta es obligatorio");
+        }
+        
+        /*
+        Herramientas validarHerramienta = buscarxNombre(nuevaHerramienta.getNombre());
+        if( validarHerramienta != null){
+             throw new Exception("La herramienta ya existe");
+        }*/
+        
+        herramientasDAO.create(nuevaHerramienta);
+    }
+
+    @Override
+    public void editarHerramienta(Herramientas editarHerramienta) throws Exception {
+        if(editarHerramienta.getNombre().equals("")){
+            throw new Exception("El nombre de la herramienta es obligatorio");
+        }
+        
+        herramientasDAO.edit(editarHerramienta);
+    }
+
+    @Override
+    public void eliminarHerramienta(Herramientas eliminarHerramienta) {
+        herramientasDAO.remove(eliminarHerramienta);
+    }
+
+    @Override
+    public Herramientas buscarxNombre(String nombre) {
+        return herramientasDAO.buscarxNombre(nombre);
+    }
 }

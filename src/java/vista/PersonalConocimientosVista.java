@@ -25,6 +25,7 @@ import modelo.Ingenieros;
 import modelo.SeminariosAsistidos;
 import modelo.SeminariosCursos;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
+import org.primefaces.event.SelectEvent;
 
 /**
  *
@@ -67,7 +68,7 @@ public class PersonalConocimientosVista {
     private SelectOneMenu cmbIngenieros;
     private SelectOneMenu cmbIngenierosSeminarios;
     private SelectOneMenu cmbHerramientas;
-    private SelectOneMenu cmbSeminarios;
+    private SelectOneMenu cmbSeminarios; 
 
     public List<Conocimientos> getListaConocimientos() {
         listaConocimientos = conocimientosLogica.listaConocimientos();
@@ -139,7 +140,6 @@ public class PersonalConocimientosVista {
     }
 
     public List<SelectItem> getSelectItemIngenierosSeminarios() {
-        selectItemIngenierosSeminarios = new ArrayList<SelectItem>();
         List<Ingenieros> listaIngenieros = ingenierosLogica.listarIngenieros();
 
         for (int i = 0; i < listaIngenieros.size(); i++) {
@@ -158,7 +158,6 @@ public class PersonalConocimientosVista {
     
 
     public List<SelectItem> getSelectItemHerramientas() {
-        selectItemHerramientas = new ArrayList<SelectItem>();
         List<Herramientas> listaHerramientas = herramientasLogica.listaHerramientas();
 
         for (int i = 0; i < listaHerramientas.size(); i++) {
@@ -174,7 +173,6 @@ public class PersonalConocimientosVista {
     }
 
     public List<SelectItem> getSelectItemSeminarios() {
-        selectItemSeminarios = new ArrayList<SelectItem>();
         List<SeminariosCursos> listaSeminarios = seminariosLogica.listaSeminariosCursos();
 
         for (int i = 0; i < listaSeminarios.size(); i++) {

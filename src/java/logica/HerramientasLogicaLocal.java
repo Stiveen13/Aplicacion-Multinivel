@@ -19,4 +19,13 @@ public interface HerramientasLogicaLocal {
     public List<Herramientas> listaHerramientas();
     
     public Herramientas buscarxId(Integer id);
+    
+    public Herramientas buscarxNombre(String nombre);
+    
+    public void registrarHerramienta(Herramientas nuevaHerramienta) throws Exception;
+    
+    public void editarHerramienta(Herramientas editarHerramienta) throws Exception;
+    
+    public void eliminarHerramienta(Herramientas eliminarHerramienta);
+    
 }

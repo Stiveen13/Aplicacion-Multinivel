@@ -29,12 +29,25 @@ public class IngenieroLogica implements IngenieroLogicaLocal {
     }
 
     @Override
-    public void registrarIngeniero(Ingenieros ing) throws Exception {
-        ingenierosDAO.create(ing);
+    public void registrarIngeniero(Ingenieros nuevoIngeniero) throws Exception {
+        if(nuevoIngeniero.getCedula() == 0){
+            throw new Exception("La cedula es obligatoria");
+        }
+        ingenierosDAO.create(nuevoIngeniero);
     }
 
     @Override
     public Ingenieros buscarxCedula(Integer cedula) {
         return ingenierosDAO.findxCedula(cedula);
+    }
+
+    @Override
+    public void editarIngeniero(Ingenieros editarIngeniero) throws Exception {
+        ingenierosDAO.edit(editarIngeniero);
+    }
+
+    @Override
+    public void eliminarIngeniero(Ingenieros eliminarIngeniero) {
+        ingenierosDAO.remove(eliminarIngeniero);
     }
 }

@@ -6,7 +6,8 @@
                 xmlns:f="http://java.sun.com/jsf/core"
                 xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:p="http://primefaces.org/ui"
-                >
+
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <ui:define name="title-jr">
         <title>Personal - Datos</title>
     </ui:define>
@@ -66,6 +67,7 @@
                     <p:inputText id="txtEdad"
                                  binding="#{personalInformacionVista.txtEdad}"
                                  required="true"
+                                 disabled="true"
                                  requiredMessage=""/>
 
                     <h:outputText value="Sexo: "/>
@@ -92,22 +94,22 @@
                         <f:selectItem itemLabel="Senior" itemValue="2" />
                         <f:selectItem itemLabel="Junior" itemValue="3" />
                     </p:selectOneMenu>
-                    
+
                     <h:outputText value="Titulo Obtenido: "/>
                     <p:inputText id="titulo"
-                                
+                                 binding="#{personalInformacionVista.txtTituloObtenido}"
                                  required="true"
                                  requiredMessage=""/>
-                    
+
                     <h:outputText value="Institucion: "/>
                     <p:inputText id="institucion"
-                                 
+                                 binding="#{personalInformacionVista.txtInstitucion}"
                                  required="true"
                                  requiredMessage=""/>
-                    
+
                     <h:outputText value="Fecha Obtencion: "/>
                     <p:calendar id="fechaObtencion" 
-                                
+                                binding="#{personalInformacionVista.fechaObtencion}"
                                 value="#{calendarView.fechaTitulo}" 
                                 pattern="dd-MM-yyyy" 
                                 mask="true" />
@@ -123,10 +125,10 @@
                                  actionListener="#{personalInformacionVista.registrarIngeniero()}" 
                                  update=":formIngeniero"/>
                 <p:commandButton value="Editar" 
-                                 actionListener="#"
+                                 actionListener="#{personalInformacionVista.editarIngeniero()}"
                                  update=":formIngeniero"/>   
                 <p:commandButton value="Eliminar" 
-                                 actionListener="#"  
+                                 actionListener="#{personalInformacionVista.eliminarIngeniero()}"  
                                  update=":formIngeniero">
                     <p:confirm header="Confirmation" 
                                message="Estas completamente seguro?" 
@@ -137,6 +139,10 @@
                     <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
                     <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
                 </p:confirmDialog>
+
+                <p:commandButton value="Limpiar Campos" 
+                                 actionListener="#{personalInformacionVista.limpiarCampos()}" 
+                                 update=":formIngeniero:panelRegistrarIng"/>
             </div>
             <br/>
 
@@ -154,7 +160,13 @@
                          paginator="true"
                          paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                          rowsPerPageTemplate="5,10,15"
+                         selection="#{personalInformacionVista.ingenieroSelect}"
+                         selectionMode="single"
+                         rowKey="#{ingeniero.cedula}"
                          >
+                <p:ajax event="rowSelect" 
+                        listener="#{personalInformacionVista.seleccionarIngeniero}" 
+                        update=":formIngeniero"/>
                 <p:column headerText="Cedula">
                     <h:outputText value="#{ingeniero.cedula}" />
                 </p:column>
