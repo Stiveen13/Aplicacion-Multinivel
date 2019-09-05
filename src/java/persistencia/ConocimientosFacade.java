@@ -7,7 +7,9 @@ package persistencia;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import modelo.Conocimientos;
 
 /**
@@ -27,6 +29,18 @@ public class ConocimientosFacade extends AbstractFacade<Conocimientos> implement
 
     public ConocimientosFacade() {
         super(Conocimientos.class);
+    }
+
+    @Override
+    public Conocimientos findxId(Integer id) {
+        String consulta = "SELECT c FROM Conocimientos c WHERE c.id = " + id;
+
+        try {
+            Query query = em.createQuery(consulta);
+            return (Conocimientos) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
     }
     
 }

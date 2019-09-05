@@ -18,5 +18,9 @@ public interface SeminariosCursosLogicaLocal {
     
     public List<SeminariosCursos> listaSeminariosCursos();
     public void registrarSeminarioCurso(SeminariosCursos nuevoObj) throws Exception;
+    public void editarSeminarioCurso(SeminariosCursos editSeminario) throws Exception;
+    public void eliminarSeminarioCurso(SeminariosCursos eliminarSeminario) throws Exception;
     public SeminariosCursos buscarxId(Integer id);
+    public SeminariosCursos buscarxNombre(String nombre);
+   
 }

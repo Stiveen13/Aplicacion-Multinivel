@@ -5,6 +5,7 @@
  */
 package persistencia;
 
+import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -41,5 +42,38 @@ public class IngenierosFacade extends AbstractFacade<Ingenieros> implements Inge
             return null;
         }
     }
-    
+
+    @Override
+    public List<Ingenieros> ingenierosJefe() {
+        String consulta = "SELECT i FROM Ingenieros i WHERE i.clase =  " + 1;
+        try {
+            Query query = em.createQuery(consulta);
+            return (List<Ingenieros>) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Ingenieros> ingenierosSenior() {
+        String consulta = "SELECT i FROM Ingenieros i WHERE i.clase =  " + 2;
+        try {
+            Query query = em.createQuery(consulta);
+            return (List<Ingenieros>) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
+    @Override
+    public List<Ingenieros> ingenierosJunior() {
+        String consulta = "SELECT i FROM Ingenieros i WHERE i.clase =  " + 3;
+        try {
+            Query query = em.createQuery(consulta);
+            return (List<Ingenieros>) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
+
 }

@@ -31,4 +31,10 @@ public interface IngenierosFacadeLocal {
     int count();
     
     Ingenieros findxCedula(Integer cedula);
+    
+    List<Ingenieros> ingenierosJefe();
+    
+    List<Ingenieros> ingenierosSenior();
+    
+    List<Ingenieros> ingenierosJunior();
 }

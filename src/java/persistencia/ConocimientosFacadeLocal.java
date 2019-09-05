@@ -30,4 +30,6 @@ public interface ConocimientosFacadeLocal {
 
     int count();
     
+    Conocimientos findxId(Integer id);
+    
 }

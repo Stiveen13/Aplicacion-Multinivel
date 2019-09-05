@@ -39,4 +39,27 @@ public class SeminariosCursosLogica implements SeminariosCursosLogicaLocal {
     public SeminariosCursos buscarxId(Integer id) {
         return seminariosCursosDAO.findxId(id);
     }
+
+    @Override
+    public void editarSeminarioCurso(SeminariosCursos editSeminario) throws Exception {
+        if(editSeminario == null){
+            throw new Exception("Ningun seminario o curso seleccionado");
+        }
+        
+        seminariosCursosDAO.edit(editSeminario);
+    }
+
+    @Override
+    public void eliminarSeminarioCurso(SeminariosCursos eliminarSeminario) throws Exception {
+        if(eliminarSeminario == null){
+            throw new Exception("Ningun seminario o curso seleccionado");
+        }
+        
+        seminariosCursosDAO.remove(eliminarSeminario);
+    }
+
+    @Override
+    public SeminariosCursos buscarxNombre(String nombre) {
+        return seminariosCursosDAO.findxNombres(nombre);
+    }
 }

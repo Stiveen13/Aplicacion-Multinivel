@@ -16,47 +16,7 @@
             <p:messages id="mensajes" showDetail="true"/>
             <br/>
 
-            <!-- El atributo Value de la tabla hace referencia a la listaContratistas
-                creada en la clase ContratistaVista, esta lista es iterada y cada
-                elemento es almacenado en var="contratista ".
-                
-                Los tres ultimos atributos activan una propiedad de la tabla
-                que permite interactuar con ella. 
-                selection: cuando se seleccionada una tupla de la tabla los datos son almacenados en la variable selectContratista
-                selectionMode:
-                rowKey: llave asignada a cada tupla, en este caso se eligió el codigo del contratista-->
-
-            <p:panel id="seminariosCursos" header="Seminarios y Cursos" style="margin-bottom:20px">
-                <p:dataTable var="seminarioCurso" value="#{personalConfiguracionVista.listaSeminariosCursos}" rows="10"
-                             paginator="true"
-                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-                             rowsPerPageTemplate="5,10,15"
-                             >
-                    <p:column headerText="Id">
-                        <h:outputText value="#{seminarioCurso.id}" />
-                    </p:column>
-                    <p:column headerText="Nombre">
-                        <h:outputText value="#{seminarioCurso.nombre}" />
-                    </p:column>
-                    <p:column headerText="Lugar">
-                        <h:outputText value="#{seminarioCurso.lugar}" />
-                    </p:column>
-                    <p:column headerText="Fecha de Inicio">
-                        <h:outputText value="#{seminarioCurso.fechaInicio}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
-                        </h:outputText>
-                    </p:column>
-                    <p:column headerText="Fecha de Finalizacion">
-                        <h:outputText value="#{seminarioCurso.fechaFinalizacion}">
-                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
-                        </h:outputText>
-                    </p:column>
-                    <f:facet name="paginatorBottomRight">
-                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
-                    </f:facet>
-                </p:dataTable>
-            </p:panel>
-            <br/>
+            <!-- *************** Gestion de las herramientas ***************** --> 
             <p:panel id="herramientas" header="Herramientas" style="margin-bottom:20px">
                 <br/>
                 <div align="center"> 
@@ -117,13 +77,10 @@
                     <p:ajax event="rowSelect" 
                             listener="#{personalConfiguracionVista.seleccionarHerramienta}" 
                             update=":formConfiguracionEstudios:herramientas"/>
-                    <p:column headerText="Id">
-                        <h:outputText value="#{herramienta.id}" />
-                    </p:column>
                     <p:column headerText="Nombre">
                         <h:outputText value="#{herramienta.nombre}" />
                     </p:column>
-                    <p:column headerText="Tipo">
+                    <p:column headerText="Tipo" style="width:100px">
                         <h:outputText value="#{herramienta.tipo}" />
                     </p:column>
                     <f:facet name="paginatorBottomRight">
@@ -131,6 +88,102 @@
                     </f:facet>
                 </p:dataTable>
             </p:panel>
+            
+            <!-- ********************************************************** -->
+            
+            <!-- **************** Gestion de seminarios y cursos ************** -->
+            
+            <p:panel id="seminariosCursos" header="Seminarios y Cursos" style="margin-bottom:20px">
+                <div align="center"> 
+                    <p:panelGrid columns="4" id="panelRegistrarSeminario">
+                        <h:outputText value="Nombre: "/>
+                        <p:inputText id="txtNombreSeminario" 
+                                     binding="#{personalConfiguracionVista.txtNombreSeminario}"
+                                     required="true" 
+                                     requiredMessage="El nombre es obligatorio"/>
+
+                        <h:outputText value="Lugar: "/>
+                        <p:inputText id="txtLugarSeminario" 
+                                     binding="#{personalConfiguracionVista.txtLugar}"
+                                     required="true" 
+                                     requiredMessage="El lugar es obligatorio"/>
+                        <h:outputText value="Fecha Inicio "/>
+                        <p:calendar id="fechaInicioSeminario" 
+                                    binding="#{personalConfiguracionVista.fechaIngreso}"
+                                    value="#{calendarView.fechaIngresoSeminario}" 
+                                    pattern="dd-MM-yyyy" 
+                                    mask="true" />
+
+                        <h:outputText value="Fecha Finalizacion: "/>
+                        <p:calendar id="fechaFinalizacionSeminario" 
+                                    binding="#{personalConfiguracionVista.fechaFinalizacion}"
+                                    value="#{calendarView.fechaFinalizacionSeminario}" 
+                                    pattern="dd-MM-yyyy" 
+                                    mask="true" />
+                    </p:panelGrid>
+                </div>
+                <br/>
+                <div align="center"> 
+                    <!-- Similiar a los campos, en actionListener se indica que metodo será
+                    ejecutado cuando el boton es pulsado-->
+
+                    <p:commandButton value="Registrar" 
+                                     actionListener="#{personalConfiguracionVista.registrarSeminario()}" 
+                                     update=":formConfiguracionEstudios:seminariosCursos"/>
+                    <p:commandButton value="Editar" 
+                                     actionListener="#{personalConfiguracionVista.editarSeminario()}"
+                                     update=":formConfiguracionEstudios:seminariosCursos"/>   
+                    <p:commandButton value="Eliminar" 
+                                     actionListener="#{personalConfiguracionVista.eliminarSeminario()}"  
+                                     update=":formConfiguracionEstudios:seminariosCursos">
+                        <p:confirm header="Confirmation" 
+                                   message="Estas completamente seguro?" 
+                                   icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+
+                    <p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+                        <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="pi pi-check" />
+                        <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="pi pi-times" />
+                    </p:confirmDialog>
+
+                    <p:commandButton value="Limpiar Campos" 
+                                     actionListener="#{personalConfiguracionVista.limpiarCamposSeminarios()}" 
+                                     update=":formConfiguracionEstudios:seminariosCursos"/>
+                </div>
+                <br/>
+                <p:dataTable var="seminarioCurso" value="#{personalConfiguracionVista.listaSeminariosCursos}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             selection="#{personalConfiguracionVista.seminariosCursosSelect}"
+                             selectionMode="single"
+                             rowKey="#{seminarioCurso.id}"
+                             >
+                    <p:ajax event="rowSelect" 
+                            listener="#{personalConfiguracionVista.seleccionarSeminario}" 
+                            update=":formConfiguracionEstudios:seminariosCursos"/>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{seminarioCurso.nombre}" />
+                    </p:column>
+                    <p:column headerText="Lugar">
+                        <h:outputText value="#{seminarioCurso.lugar}" />
+                    </p:column>
+                    <p:column headerText="Fecha de Inicio">
+                        <h:outputText value="#{seminarioCurso.fechaInicio}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Fecha de Finalizacion">
+                        <h:outputText value="#{seminarioCurso.fechaFinalizacion}">
+                            <f:convertDateTime pattern="dd/MM/yyyy" type="date" />
+                        </h:outputText>
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+            <br/>  
         </h:form>
     </ui:define>
 </ui:composition>

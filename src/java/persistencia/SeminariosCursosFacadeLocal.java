@@ -32,4 +32,6 @@ public interface SeminariosCursosFacadeLocal {
     
     SeminariosCursos findxId(Integer id);
     
+    SeminariosCursos findxNombres(String nombre);
+    
 }

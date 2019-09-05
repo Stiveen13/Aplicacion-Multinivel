@@ -38,6 +38,8 @@ public class CalendarView {
     private Date minDate;
     private Date maxDate;
     private Date fechaTitulo;
+    private Date fechaIngresoSeminario;
+    private Date fechaFinalizacionSeminario;
 
     public void init() {
         invalidDates = new ArrayList<>();
@@ -90,10 +92,7 @@ public class CalendarView {
     public void setFechaTitulo(Date fechaTitulo) {
         this.fechaTitulo = fechaTitulo;
     }
-    
-
-    
-    
+   
     public List<Date> getMulti() {
         return multi;
     }
@@ -141,5 +140,23 @@ public class CalendarView {
     public void setMaxDate(Date maxDate) {
         this.maxDate = maxDate;
     }
+
+    public Date getFechaIngresoSeminario() {
+        return fechaIngresoSeminario;
+    }
+
+    public void setFechaIngresoSeminario(Date fechaIngresoSeminario) {
+        this.fechaIngresoSeminario = fechaIngresoSeminario;
+    }
+
+    public Date getFechaFinalizacionSeminario() {
+        return fechaFinalizacionSeminario;
+    }
+
+    public void setFechaFinalizacionSeminario(Date fechaFinalizacionSeminario) {
+        this.fechaFinalizacionSeminario = fechaFinalizacionSeminario;
+    }
+    
+    
 
 }

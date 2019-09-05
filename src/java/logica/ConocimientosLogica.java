@@ -30,4 +30,14 @@ public class ConocimientosLogica implements ConocimientosLogicaLocal {
     public void registarConocimiento(Conocimientos nuevoConocimiento) throws Exception {
         conocimientosDAO.create(nuevoConocimiento);
     }
+
+    @Override
+    public Conocimientos buscarxId(Integer id) throws Exception {
+        return conocimientosDAO.findxId(id);
+    }
+
+    @Override
+    public void eliminarConocimiento(Conocimientos eliminarConocimiento) throws Exception {
+        conocimientosDAO.remove(eliminarConocimiento);
+    }
 }

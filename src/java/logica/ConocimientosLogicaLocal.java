@@ -19,4 +19,8 @@ public interface ConocimientosLogicaLocal {
     public List<Conocimientos> listaConocimientos();
     
     public void registarConocimiento(Conocimientos nuevoConocimiento) throws Exception;
+    
+    public void eliminarConocimiento(Conocimientos eliminarConocimiento) throws Exception;
+    
+    public Conocimientos buscarxId(Integer id) throws Exception;
 }

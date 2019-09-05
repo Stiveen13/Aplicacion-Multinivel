@@ -8,21 +8,12 @@
                 xmlns:p="http://primefaces.org/ui"
                 >
     <ui:define name="title-jr">
-        <title>Personal - Datos</title>
+        <title>Personal - Conocimientos</title>
     </ui:define>
     <ui:define name="body-jr">
-        <h:form id="formConfiguracionEstudios">
+        <h:form id="formConocimientos">
             <!-- Mensaje que se actualiza con la la excepciones -->
             <p:messages id="mensajes" showDetail="true"/>
-            <!-- El atributo Value de la tabla hace referencia a la listaContratistas
-                creada en la clase ContratistaVista, esta lista es iterada y cada
-                elemento es almacenado en var="contratista ".
-                
-                Los tres ultimos atributos activan una propiedad de la tabla
-                que permite interactuar con ella. 
-                selection: cuando se seleccionada una tupla de la tabla los datos son almacenados en la variable selectContratista
-                selectionMode:
-                rowKey: llave asignada a cada tupla, en este caso se eligió el codigo del contratista-->
 
             <p:panel id="conocimientos" header="Conocimientos" style="margin-bottom:20px">
                 <div align="center"> 
@@ -50,11 +41,11 @@
 
                     <p:commandButton value="Registrar" 
                                      actionListener="#{personalConocimientosVista.registrarConocimiento()}" 
-                                     update=":formConfiguracionEstudios:conocimientos"/>
+                                     update=":formConocimientos:conocimientos"/>
                     
                     <p:commandButton value="Eliminar" 
-                                     actionListener="#"  
-                                     update=":formConfiguracionEstudios:conocimientos">
+                                     actionListener="#{personalConocimientosVista.eliminarConocimiento()}"  
+                                     update=":formConocimientos:conocimientos">
                         <p:confirm header="Confirmation" 
                                    message="Estas completamente seguro?" 
                                    icon="pi pi-exclamation-triangle" />
@@ -70,7 +61,14 @@
                              paginator="true"
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              rowsPerPageTemplate="5,10,15"
+                             selection="#{personalConocimientosVista.conociminetosSelect}"
+                             selectionMode="single"
+                             rowKey="#{conocimiento.id}"
                              >
+                    <p:ajax event="rowSelect" 
+                            listener="#{personalConocimientosVista.seleccionarConocimiento}" 
+                            update=":formConocimientos:conocimientos"/>
+                    
                     <p:column headerText="Cedula">
                         <h:outputText value="#{conocimiento.ingenierosCedula.cedula}" />
                     </p:column>
@@ -92,6 +90,8 @@
                 </p:dataTable>
             </p:panel>
             <br/>
+            
+            <!-- ************* Gestion de los seminarios ********************* -->
             <p:panel id="seminariosAsistidos" header="Seminarios Asistidos" style="margin-bottom:20px">
                 <div align="center"> 
                     <p:panelGrid columns="4" id="panelRegistarAsistencia">
@@ -118,11 +118,11 @@
 
                     <p:commandButton value="Registrar" 
                                      actionListener="#{personalConocimientosVista.registrarAsistenciaCurso()}"
-                                     update=":formConfiguracionEstudios:seminariosAsistidos"/>
+                                     update=":formConocimientos:seminariosAsistidos"/>
                      
                     <p:commandButton value="Eliminar" 
-                                     actionListener="#"  
-                                     update=":formConfiguracionEstudios:seminariosAsistidos">
+                                     actionListener="#{personalConocimientosVista.eliminarAsistenciaCurso()}"  
+                                     update=":formConocimientos:seminariosAsistidos">
                         <p:confirm header="Confirmation" 
                                    message="Estas completamente seguro?" 
                                    icon="pi pi-exclamation-triangle" />
@@ -138,7 +138,14 @@
                              paginator="true"
                              paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
                              rowsPerPageTemplate="5,10,15"
+                             selection="#{personalConocimientosVista.seminariosAsistidosSelect}"
+                             selectionMode="single"
+                             rowKey="#{seminarioAsistido.id}"
                              >
+                    <p:ajax event="rowSelect" 
+                            listener="#{personalConocimientosVista.seleccionarSeminarioAsistido}" 
+                            update=":formConocimientos:seminariosAsistidos"/>
+                    
                     <p:column headerText="Cedula">
                         <h:outputText value="#{seminarioAsistido.ingenierosCedula.cedula}" />
                     </p:column>

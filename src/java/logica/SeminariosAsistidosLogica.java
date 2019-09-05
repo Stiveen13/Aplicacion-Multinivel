@@ -30,4 +30,9 @@ public class SeminariosAsistidosLogica implements SeminariosAsistidosLogicaLocal
     public List<SeminariosAsistidos> listaSeminarios() {
         return seminariosAsistidosDAO.findAll();
     }
+
+    @Override
+    public void eliminarSeminarioAsistido(SeminariosAsistidos eliminarRegistro) throws Exception {
+        seminariosAsistidosDAO.remove(eliminarRegistro);
+    }
 }

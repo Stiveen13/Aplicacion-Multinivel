@@ -6,7 +6,6 @@
 package vista;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.inject.Named;
@@ -53,23 +52,41 @@ public class PersonalConocimientosVista {
 
     @EJB
     private SeminariosCursosLogicaLocal seminariosLogica;
-    
+
     @EJB
     private SeminariosAsistidosLogicaLocal seminariosAsistidosLogica;
 
+    /**
+     * Variables para gestionar la tabla conocimientos
+     */
     private List<Conocimientos> listaConocimientos;
-    private List<SeminariosAsistidos> listaSeminariosAsistidos;
-
     private List<SelectItem> selectItemIngenieros;
-    private List<SelectItem> selectItemIngenierosSeminarios;
     private List<SelectItem> selectItemHerramientas;
-    private List<SelectItem> selectItemSeminarios;
-    
     private SelectOneMenu cmbIngenieros;
-    private SelectOneMenu cmbIngenierosSeminarios;
     private SelectOneMenu cmbHerramientas;
-    private SelectOneMenu cmbSeminarios; 
+    private Conocimientos conociminetosSelect;
+    /**
+     * ===============================================
+     */
 
+    /**
+     * Variables para gestionar la tabla seminariosAsistidos
+     */
+    private List<SeminariosAsistidos> listaSeminariosAsistidos;
+    private List<SelectItem> selectItemIngenierosSeminarios;
+    private List<SelectItem> selectItemSeminarios;
+    private SelectOneMenu cmbIngenierosSeminarios;
+    private SelectOneMenu cmbSeminarios;
+    private SeminariosAsistidos seminariosAsistidosSelect;
+
+    /**
+     * ===============================================
+     */
+    /**
+     * =================== Gestion de la tabla conocimientos ==============
+     *
+     * @return
+     */
     public List<Conocimientos> getListaConocimientos() {
         listaConocimientos = conocimientosLogica.listaConocimientos();
         return listaConocimientos;
@@ -79,46 +96,44 @@ public class PersonalConocimientosVista {
         this.listaConocimientos = listaConocimientos;
     }
 
-    public List<SeminariosAsistidos> getListaSeminariosAsistidos() {
-        listaSeminariosAsistidos = seminariosAsistidosLogica.listaSeminarios();
-        return listaSeminariosAsistidos;
+    public SelectOneMenu getCmbIngenieros() {
+        return cmbIngenieros;
     }
 
-    public void setListaSeminariosAsistidos(List<SeminariosAsistidos> listaSeminariosAsistidos) {
-        this.listaSeminariosAsistidos = listaSeminariosAsistidos;
+    public void setCmbIngenieros(SelectOneMenu cmbIngenieros) {
+        this.cmbIngenieros = cmbIngenieros;
     }
-    
-    public void registrarConocimiento() {
-        try {
-            Ingenieros ingenieroSel = ingenierosLogica.buscarxCedula(Integer.parseInt(cmbIngenieros.getValue().toString()));
-            Herramientas herramientaSel = herramientasLogica.buscarxId(Integer.parseInt(cmbHerramientas.getValue().toString()));
-            
-            Conocimientos nuevoConocimiento = new Conocimientos();
-            nuevoConocimiento.setIngenierosCedula(ingenieroSel);
-            nuevoConocimiento.setHerramientasId(herramientaSel);
-            
-            conocimientosLogica.registarConocimiento(nuevoConocimiento);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "El conocimiento ha sido registrado"));
 
-        } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+    public SelectOneMenu getCmbHerramientas() {
+        return cmbHerramientas;
+    }
+
+    public void setCmbHerramientas(SelectOneMenu cmbHerramientas) {
+        this.cmbHerramientas = cmbHerramientas;
+    }
+
+    public Conocimientos getConociminetosSelect() {
+        return conociminetosSelect;
+    }
+
+    public void setConociminetosSelect(Conocimientos conociminetosSelect) {
+        this.conociminetosSelect = conociminetosSelect;
+    }
+
+    public List<SelectItem> getSelectItemHerramientas() {
+        selectItemHerramientas = new ArrayList<SelectItem>();
+        List<Herramientas> listaHerramientas = herramientasLogica.listaHerramientas();
+
+        for (int i = 0; i < listaHerramientas.size(); i++) {
+            SelectItem item = new SelectItem(listaHerramientas.get(i).getId(),
+                    listaHerramientas.get(i).getNombre());
+            selectItemHerramientas.add(item);
         }
+        return selectItemHerramientas;
     }
-    
-    public void registrarAsistenciaCurso() {
-        try {
-            Ingenieros ingenieroSel = ingenierosLogica.buscarxCedula(Integer.parseInt(cmbIngenierosSeminarios.getValue().toString()));
-            SeminariosCursos seminarioSel = seminariosLogica.buscarxId(Integer.parseInt(cmbSeminarios.getValue().toString()));
-            
-            SeminariosAsistidos nuevaAsistencia = new SeminariosAsistidos();
-            nuevaAsistencia.setIngenierosCedula(ingenieroSel);
-            nuevaAsistencia.setSeminariosCursosId(seminarioSel);
-            seminariosAsistidosLogica.registrarSeminarioAsistido(nuevaAsistencia);
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "La asistencia ha sido registrado"));
 
-        } catch (Exception ex) {
-            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
-        }
+    public void setSelectItemHerramientas(List<SelectItem> selectItemHerramientas) {
+        this.selectItemHerramientas = selectItemHerramientas;
     }
 
     public List<SelectItem> getSelectItemIngenieros() {
@@ -139,7 +154,109 @@ public class PersonalConocimientosVista {
         this.selectItemIngenieros = selectItemIngenieros;
     }
 
+    public void limpiarCamposConocimientos() {
+        cmbIngenieros.setValue("");
+        cmbHerramientas.setValue("");
+    }
+    
+    public void seleccionarConocimiento(SelectEvent e) {
+        conociminetosSelect = (Conocimientos) e.getObject();
+
+        cmbIngenieros.setValue(conociminetosSelect.getIngenierosCedula().getCedula());
+        cmbHerramientas.setValue(conociminetosSelect.getHerramientasId().getId());
+    }
+
+    public void registrarConocimiento() {
+        try {
+            Ingenieros ingenieroSel = ingenierosLogica.buscarxCedula(Integer.parseInt(cmbIngenieros.getValue().toString()));
+            Herramientas herramientaSel = herramientasLogica.buscarxId(Integer.parseInt(cmbHerramientas.getValue().toString()));
+
+            Conocimientos nuevoConocimiento = new Conocimientos();
+            nuevoConocimiento.setIngenierosCedula(ingenieroSel);
+            nuevoConocimiento.setHerramientasId(herramientaSel);
+            limpiarCamposConocimientos();
+            conocimientosLogica.registarConocimiento(nuevoConocimiento);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "El conocimiento ha sido registrado"));
+
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+    
+    public void eliminarConocimiento() {
+        try {
+            conocimientosLogica.eliminarConocimiento(conociminetosSelect);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "El conocimiento ha sido eliminado"));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+
+    /**
+     * ====================================================================
+     */
+    /**
+     * =================== Gestion de la tabla Seminarios Asistidos
+     * ==============
+     *
+     * @return
+     */
+    public List<SeminariosAsistidos> getListaSeminariosAsistidos() {
+        listaSeminariosAsistidos = seminariosAsistidosLogica.listaSeminarios();
+        return listaSeminariosAsistidos;
+    }
+
+    public void setListaSeminariosAsistidos(List<SeminariosAsistidos> listaSeminariosAsistidos) {
+        this.listaSeminariosAsistidos = listaSeminariosAsistidos;
+    }
+
+    public void limpiarCamposSeminariosAsistidos() {
+        cmbIngenierosSeminarios.setValue("");
+        cmbSeminarios.setValue("");
+    }
+
+    /**
+     * Cuando el usuario seleccionada una fila de la tabla se actualiza la
+     * variable herramientasSelect, de esta forma podemos saber cual elemento
+     * desea actualizar o eliminar
+     */
+    public void seleccionarSeminarioAsistido(SelectEvent e) {
+        seminariosAsistidosSelect = (SeminariosAsistidos) e.getObject();
+
+        cmbIngenierosSeminarios.setValue(seminariosAsistidosSelect.getIngenierosCedula().getCedula());
+        cmbSeminarios.setValue(seminariosAsistidosSelect.getSeminariosCursosId().getId());
+    }
+
+    public void registrarAsistenciaCurso() {
+        try {
+            Ingenieros ingenieroSel = ingenierosLogica.buscarxCedula(Integer.parseInt(cmbIngenierosSeminarios.getValue().toString()));
+            SeminariosCursos seminarioSel = seminariosLogica.buscarxId(Integer.parseInt(cmbSeminarios.getValue().toString()));
+
+            SeminariosAsistidos nuevaAsistencia = new SeminariosAsistidos();
+            nuevaAsistencia.setIngenierosCedula(ingenieroSel);
+            nuevaAsistencia.setSeminariosCursosId(seminarioSel);
+            seminariosAsistidosLogica.registrarSeminarioAsistido(nuevaAsistencia);
+            limpiarCamposSeminariosAsistidos();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "La asistencia ha sido registrado"));
+
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+
+    public void eliminarAsistenciaCurso() {
+        try {
+            seminariosAsistidosLogica.eliminarSeminarioAsistido(seminariosAsistidosSelect);
+            limpiarCamposSeminariosAsistidos();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "La asistencia ha sido eliminada"));
+
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+
     public List<SelectItem> getSelectItemIngenierosSeminarios() {
+        selectItemIngenierosSeminarios = new ArrayList<SelectItem>();
         List<Ingenieros> listaIngenieros = ingenierosLogica.listarIngenieros();
 
         for (int i = 0; i < listaIngenieros.size(); i++) {
@@ -155,24 +272,9 @@ public class PersonalConocimientosVista {
     public void setSelectItemIngenierosSeminarios(List<SelectItem> selectItemIngenierosSeminarios) {
         this.selectItemIngenierosSeminarios = selectItemIngenierosSeminarios;
     }
-    
-
-    public List<SelectItem> getSelectItemHerramientas() {
-        List<Herramientas> listaHerramientas = herramientasLogica.listaHerramientas();
-
-        for (int i = 0; i < listaHerramientas.size(); i++) {
-            SelectItem item = new SelectItem(listaHerramientas.get(i).getId(),
-                    listaHerramientas.get(i).getNombre());
-            selectItemHerramientas.add(item);
-        }
-        return selectItemHerramientas;
-    }
-
-    public void setSelectItemHerramientas(List<SelectItem> selectItemHerramientas) {
-        this.selectItemHerramientas = selectItemHerramientas;
-    }
 
     public List<SelectItem> getSelectItemSeminarios() {
+        selectItemSeminarios = new ArrayList<SelectItem>();
         List<SeminariosCursos> listaSeminarios = seminariosLogica.listaSeminariosCursos();
 
         for (int i = 0; i < listaSeminarios.size(); i++) {
@@ -180,20 +282,12 @@ public class PersonalConocimientosVista {
                     listaSeminarios.get(i).getNombre());
             selectItemSeminarios.add(item);
         }
-        
+
         return selectItemSeminarios;
     }
 
     public void setSelectItemSeminarios(List<SelectItem> selectItemSeminarios) {
         this.selectItemSeminarios = selectItemSeminarios;
-    }
-
-    public SelectOneMenu getCmbIngenieros() {
-        return cmbIngenieros;
-    }
-
-    public void setCmbIngenieros(SelectOneMenu cmbIngenieros) {
-        this.cmbIngenieros = cmbIngenieros;
     }
 
     public SelectOneMenu getCmbIngenierosSeminarios() {
@@ -203,15 +297,6 @@ public class PersonalConocimientosVista {
     public void setCmbIngenierosSeminarios(SelectOneMenu cmbIngenierosSeminarios) {
         this.cmbIngenierosSeminarios = cmbIngenierosSeminarios;
     }
-    
-
-    public SelectOneMenu getCmbHerramientas() {
-        return cmbHerramientas;
-    }
-
-    public void setCmbHerramientas(SelectOneMenu cmbHerramientas) {
-        this.cmbHerramientas = cmbHerramientas;
-    }
 
     public SelectOneMenu getCmbSeminarios() {
         return cmbSeminarios;
@@ -220,7 +305,12 @@ public class PersonalConocimientosVista {
     public void setCmbSeminarios(SelectOneMenu cmbSeminarios) {
         this.cmbSeminarios = cmbSeminarios;
     }
-    
-    
 
+    public SeminariosAsistidos getSeminariosAsistidosSelect() {
+        return seminariosAsistidosSelect;
+    }
+
+    public void setSeminariosAsistidosSelect(SeminariosAsistidos seminariosAsistidosSelect) {
+        this.seminariosAsistidosSelect = seminariosAsistidosSelect;
+    }
 }

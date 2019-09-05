@@ -17,4 +17,5 @@ import modelo.SeminariosAsistidos;
 public interface SeminariosAsistidosLogicaLocal {
     public List<SeminariosAsistidos> listaSeminarios();
     public void registrarSeminarioAsistido(SeminariosAsistidos nuevoRegistro) throws Exception;
+    public void eliminarSeminarioAsistido(SeminariosAsistidos eliminarRegistro) throws Exception;
 }

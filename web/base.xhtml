@@ -26,14 +26,19 @@
                 <p:layoutUnit position="west" size="200" header="Menu" collapsible="true">
                     <h:form>
                         <p:growl id="messages" showDetail="true"/>
-                        <p:slideMenu style="width:200px">
-                            <p:submenu label="Personal">
+                        <p:slideMenu style="width:200px;">
+                            <p:submenu label="Personal" style="height: 90px;">
                                 <p:menuitem value="Informacion Basica" action="/personal/informacion.xhtml" update="messages"/>
                                 <p:menuitem value="Conocimientos" action="/personal/conocimientos.xhtml" update="messages"/>
                                 <p:menuitem value="Configuracion" action="/personal/configuracion.xhtml" update="messages"/>
+                                <p:menuitem value="Asignacion de recursos" action="#" update="messages"/>
                             </p:submenu>
                             <p:separator />
-                            <p:menuitem value="Untitled" action="/" update="messages"/>
+                            <p:submenu label="Gestion Proyectos" style="height: 45px;">                           
+                                <p:menuitem value="Proyectos" action="#" update="messages"/>
+                                <p:menuitem value="Requisitos" action="#" update="messages"/>
+                                <p:menuitem value="Compatibilidad" action="#" update="messages"/>
+                            </p:submenu>
                         </p:slideMenu>
                     </h:form>
                 </p:layoutUnit>

@@ -5,6 +5,7 @@
  */
 package vista;
 
+import java.util.Date;
 import javax.ejb.EJB;
 import java.util.List;
 import javax.inject.Named;
@@ -15,6 +16,7 @@ import logica.HerramientasLogicaLocal;
 import logica.SeminariosCursosLogicaLocal;
 import modelo.Herramientas;
 import modelo.SeminariosCursos;
+import org.primefaces.component.calendar.Calendar;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.SelectEvent;
@@ -39,29 +41,37 @@ public class PersonalConfiguracionVista {
     @EJB
     private HerramientasLogicaLocal herramientasLogica;
 
+    /**
+     * Variables para gestionar los datos de la tabla seminarios y cursos
+     */
     private List<SeminariosCursos> listaSeminariosCursos;
+    private SeminariosCursos seminariosCursosSelect;
+    /**
+     * Variables Prime para obtener los datos digitados por el usuario
+     */
+    private InputText txtNombreSeminario;
+    private InputText txtLugar;
+    private Calendar fechaIngreso;
+    private Calendar fechaFinalizacion;
 
+    /** ================================================================= */
+    
     /**
      * Variables para gestionar los datos de la tabla herramientas
      */
     private List<Herramientas> listaHerramientas; //Almacena todas las tuplas de la tabla herramientas
     private Herramientas herramientaSelect; // permite obtener la tupla que el usuario a seleccionado en la tabla
-
     /**
      * Variables Prime para obtener los datos digitados por el usuario
      */
     private InputText txtNombre;
     private SelectOneMenu cmbTipo;
 
-    public List<SeminariosCursos> getListaSeminariosCursos() {
-        listaSeminariosCursos = seminariosCursosLogica.listaSeminariosCursos();
-        return listaSeminariosCursos;
-    }
-
-    public void setListaSeminariosCursos(List<SeminariosCursos> listaSeminariosCursos) {
-        this.listaSeminariosCursos = listaSeminariosCursos;
-    }
-
+    /**
+     * ============== Funciones para el manejo de herramientas =============
+     * @return 
+     */
+    /* @return*/
     public List<Herramientas> getListaHerramientas() {
         listaHerramientas = herramientasLogica.listaHerramientas();
         return listaHerramientas;
@@ -150,9 +160,133 @@ public class PersonalConfiguracionVista {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
         }
     }
-    
+
     public void eliminarHerramienta() {
         herramientasLogica.eliminarHerramienta(herramientaSelect);
+    }
+
+    /**
+     * =====================================================================
+     *
+     * @return
+     */
+    public List<SeminariosCursos> getListaSeminariosCursos() {
+        listaSeminariosCursos = seminariosCursosLogica.listaSeminariosCursos();
+        return listaSeminariosCursos;
+    }
+
+    public void setListaSeminariosCursos(List<SeminariosCursos> listaSeminariosCursos) {
+        this.listaSeminariosCursos = listaSeminariosCursos;
+    }
+
+    public SeminariosCursos getSeminariosCursosSelect() {
+        return seminariosCursosSelect;
+    }
+
+    public void setSeminariosCursosSelect(SeminariosCursos seminariosCursosSelect) {
+        this.seminariosCursosSelect = seminariosCursosSelect;
+    }
+
+    public InputText getTxtNombreSeminario() {
+        return txtNombreSeminario;
+    }
+
+    public void setTxtNombreSeminario(InputText txtNombreSeminario) {
+        this.txtNombreSeminario = txtNombreSeminario;
+    }
+
+    public InputText getTxtLugar() {
+        return txtLugar;
+    }
+
+    public void setTxtLugar(InputText txtLugar) {
+        this.txtLugar = txtLugar;
+    }
+
+    public Calendar getFechaIngreso() {
+        return fechaIngreso;
+    }
+
+    public void setFechaIngreso(Calendar fechaIngreso) {
+        this.fechaIngreso = fechaIngreso;
+    }
+
+    public Calendar getFechaFinalizacion() {
+        return fechaFinalizacion;
+    }
+
+    public void setFechaFinalizacion(Calendar fechaFinalizacion) {
+        this.fechaFinalizacion = fechaFinalizacion;
+    }
+
+    public void limpiarCamposSeminarios() {
+        txtNombreSeminario.setValue("");
+        txtLugar.setValue("");
+    }
+
+    /**
+     * Cuando el usuario seleccionada una fila de la tabla se actualiza la
+     * variable herramientasSelect, de esta forma podemos saber cual elemento
+     * desea actualizar o eliminar
+     */
+    public void seleccionarSeminario(SelectEvent e) {
+        seminariosCursosSelect = (SeminariosCursos) e.getObject();
+
+        txtNombreSeminario.setValue(seminariosCursosSelect.getNombre());
+        txtLugar.setValue(seminariosCursosSelect.getLugar());
+        fechaIngreso.setValue(seminariosCursosSelect.getFechaInicio());
+        fechaFinalizacion.setValue(seminariosCursosSelect.getFechaFinalizacion());
+    }
+
+    /**
+     * Se toman los datos de los campos del formulario herramientas y se crea un
+     * objeto con esta informacion
+     */
+    public void registrarSeminario() {
+        try {
+            SeminariosCursos nuevoSeminario = new SeminariosCursos();
+
+            nuevoSeminario.setNombre(txtNombreSeminario.getValue().toString());
+            nuevoSeminario.setLugar(txtLugar.getValue().toString());
+            nuevoSeminario.setFechaInicio((Date) fechaIngreso.getValue());
+            nuevoSeminario.setFechaFinalizacion((Date) fechaFinalizacion.getValue());
+            nuevoSeminario.setId(10);
+            seminariosCursosLogica.registrarSeminarioCurso(nuevoSeminario);
+            limpiarCamposSeminarios();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "El seminario ha sido registrado"));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+
+    /**
+     * Se toman los datos de los campos del formulario herramientas y se
+     * actualiza el objeto que previamente fue almacenado en la variable
+     * herramientaSelect
+     */
+    public void editarSeminario() {
+        try {
+            SeminariosCursos editarSeminario = seminariosCursosSelect;
+
+            editarSeminario.setNombre(txtNombreSeminario.getValue().toString());
+            editarSeminario.setLugar(txtLugar.getValue().toString());
+            editarSeminario.setFechaInicio((Date) fechaIngreso.getValue());
+            editarSeminario.setFechaFinalizacion((Date) fechaFinalizacion.getValue());
+            seminariosCursosLogica.editarSeminarioCurso(editarSeminario);
+            limpiarCamposSeminarios();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "El seminario ha sido editada"));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+
+    public void eliminarSeminario() {
+        try {
+            seminariosCursosLogica.eliminarSeminarioCurso(seminariosCursosSelect);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "El seminario ha sido eliminado"));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
     }
 
 }

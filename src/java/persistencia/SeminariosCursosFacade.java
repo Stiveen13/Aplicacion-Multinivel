@@ -42,5 +42,16 @@ public class SeminariosCursosFacade extends AbstractFacade<SeminariosCursos> imp
             return null;
         }
     }
+
+    @Override
+    public SeminariosCursos findxNombres(String nombre) {
+        String consulta = "SELECT s FROM SeminariosCursos s WHERE s.nombre = " + nombre;
+        try {
+            Query query = em.createQuery(consulta);
+            return (SeminariosCursos) query.getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
     
 }
