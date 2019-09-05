@@ -48,7 +48,7 @@ public class IngenierosFacade extends AbstractFacade<Ingenieros> implements Inge
         String consulta = "SELECT i FROM Ingenieros i WHERE i.clase =  " + 1;
         try {
             Query query = em.createQuery(consulta);
-            return (List<Ingenieros>) query.getSingleResult();
+            return (List<Ingenieros>) query.getResultList();
         } catch (NoResultException nre) {
             return null;
         }

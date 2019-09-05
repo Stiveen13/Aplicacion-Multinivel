@@ -20,4 +20,7 @@ public interface IngenieroLogicaLocal {
     public void editarIngeniero(Ingenieros editarIngeniero) throws Exception;
     public Ingenieros buscarxCedula(Integer cedula);
     public void eliminarIngeniero(Ingenieros eliminarIngeniero);
+    public List<Ingenieros> ingenierosJefe();
+    public List<Ingenieros> ingenierosSenior();
+    public List<Ingenieros> ingenierosJunior();
 }

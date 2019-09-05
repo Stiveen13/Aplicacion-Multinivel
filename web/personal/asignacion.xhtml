@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!-- ui:composition permite utilizar un archivo xhtml como plantilla. en template se pone la ruta de la plantilla.-->
+<ui:composition template="/base.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                >
+    <ui:define name="title-jr">
+        <title>Personal - Asignacion</title>
+    </ui:define>
+    <ui:define name="body-jr">
+        <h:form id="formAsignacion">
+            <!-- Mensaje que se actualiza con la la excepciones -->
+            <p:messages id="mensajes" showDetail="true"/>
+            <br/>
+
+            <!-- *************** Gestion de las herramientas ***************** --> 
+            <p:panel id="jefe" header="Asignar presupuesto" style="margin-bottom:20px">
+                <br/>
+                <div align="center"> 
+                    <p:panelGrid columns="4" id="panelAsignarPresupuesto">
+                        <h:outputText value="Ingenieros Jefe: "/>
+                        <p:selectOneMenu id="cbmClase" binding="#{personalAsignacion.cmbIngenierosJefe}" style="width:100%"  
+                                         filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
+                            <f:selectItems value="#{personalAsignacion.selectItemJefe}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Presupuesto: "/>
+                        <p:inputText id="txtPresupuesto" 
+                                     binding="#{personalAsignacion.txtPresupuesto}"
+                                     required="true" 
+                                     requiredMessage="El Presupuesto es obligatorio"/>
+                    </p:panelGrid>
+                </div>
+                <br/>
+                <div align="center"> 
+                    <!-- Similiar a los campos, en actionListener se indica que metodo será
+                    ejecutado cuando el boton es pulsado-->
+
+                    <p:commandButton value="Asignar" 
+                                     actionListener="#{personalAsignacion.asignarPresupuesto()}" 
+                                     update=":formAsignacion:jefe"/>
+                    <p:commandButton value="Editar" 
+                                     actionListener="#{personalAsignacion.editarPresupuesto()}"
+                                     update=":formAsignacion:jefe"/>   
+                    <p:commandButton value="Limpiar Campos" 
+                                     actionListener="#{personalAsignacion.limpiarCamposJefe()}" 
+                                     update=":formAsignacion:jefe"/>
+                </div>
+                <br/>
+                <p:dataTable var="jefe" value="#{personalAsignacion.listaPresupuestoAsignado}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             selection="#{personalAsignacion.ingenieroJefeSelect}"
+                             selectionMode="single"
+                             rowKey="#{jefe.id}"
+                             >
+                    <p:ajax event="rowSelect" 
+                            listener="#{personalAsignacion.seleccionarIngenieroJefe}" 
+                            update=":formAsignacion:jefe"/>
+                    
+                    <p:column headerText="Cedula">
+                        <h:outputText value="#{jefe.ingenierosCedula.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{jefe.ingenierosCedula.nombres} #{jefe.ingenierosCedula.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Presupuesto" style="width:100px">
+                        <h:outputText value="#{jefe.presupuesto}" />
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+
+            </p:panel>
+
+            <!-- ********************************************************** -->     
+        </h:form>
+    </ui:define>
+</ui:composition>

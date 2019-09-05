@@ -50,4 +50,19 @@ public class IngenieroLogica implements IngenieroLogicaLocal {
     public void eliminarIngeniero(Ingenieros eliminarIngeniero) {
         ingenierosDAO.remove(eliminarIngeniero);
     }
+
+    @Override
+    public List<Ingenieros> ingenierosJefe() {
+        return ingenierosDAO.ingenierosJefe();
+    }
+
+    @Override
+    public List<Ingenieros> ingenierosSenior() {
+        return ingenierosDAO.ingenierosSenior();
+    }
+
+    @Override
+    public List<Ingenieros> ingenierosJunior() {
+        return ingenierosDAO.ingenierosJunior();
+    }
 }
