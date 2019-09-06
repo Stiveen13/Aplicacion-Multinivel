@@ -16,13 +16,13 @@
             <p:messages id="mensajes" showDetail="true"/>
             <br/>
 
-            <!-- *************** Gestion de las herramientas ***************** --> 
+            <!-- *************** Gestion del presupuesto ***************** --> 
             <p:panel id="jefe" header="Asignar presupuesto" style="margin-bottom:20px">
                 <br/>
                 <div align="center"> 
                     <p:panelGrid columns="4" id="panelAsignarPresupuesto">
                         <h:outputText value="Ingenieros Jefe: "/>
-                        <p:selectOneMenu id="cbmClase" binding="#{personalAsignacion.cmbIngenierosJefe}" style="width:100%"  
+                        <p:selectOneMenu id="cbmIngJefe" binding="#{personalAsignacion.cmbIngenierosJefe}" style="width:100%"  
                                          filter="true" filterMatchMode="startsWith">
                             <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
                             <f:selectItems value="#{personalAsignacion.selectItemJefe}" />
@@ -61,7 +61,7 @@
                     <p:ajax event="rowSelect" 
                             listener="#{personalAsignacion.seleccionarIngenieroJefe}" 
                             update=":formAsignacion:jefe"/>
-                    
+
                     <p:column headerText="Cedula">
                         <h:outputText value="#{jefe.ingenierosCedula.cedula}" />
                     </p:column>
@@ -78,7 +78,94 @@
 
             </p:panel>
 
-            <!-- ********************************************************** -->     
+            <!-- ********************************************************** -->
+
+            <!-- *********************** Gestion de proyectos asignados ************************ --> 
+
+            <p:panel id="senior" header="Cantidad de  proyectos Asignados" style="margin-bottom:20px">
+                <br/>
+                <p:dataTable var="senior" value="#{personalAsignacion.listaProyectosAsignados}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             >                    
+                    <p:column headerText="Cedula">
+                        <h:outputText value="#{senior.ingenierosCedula.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{senior.ingenierosCedula.nombres} #{senior.ingenierosCedula.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Cantidad Proyectos" style="width:100px">
+                        <h:outputText value="#{senior.cantidadProyectos}" />
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+
+            <!-- *********************** Gestion de proyectos asignados ************************ --> 
+
+            <p:panel id="junior" header="Cantidad de  horas Asignados" style="margin-bottom:20px">
+                <br/>
+                <div align="center"> 
+                    <p:panelGrid columns="4" id="panelAsignarHoras">
+                        <h:outputText value="Ingenieros Junior: "/>
+                        <p:selectOneMenu id="cbmIngJunior" binding="#{personalAsignacion.cmbIngenierosJunior}" style="width:100%"  
+                                         filter="true" filterMatchMode="startsWith">
+                            <f:selectItem itemLabel="- Seleccione -" itemValue=""/>
+                            <f:selectItems value="#{personalAsignacion.selectItemJunior}" />
+                        </p:selectOneMenu>
+                        <h:outputText value="Horas por dia: "/>
+                        <p:inputText id="txtHoras" 
+                                     binding="#{personalAsignacion.txtHoras}"
+                                     required="true" 
+                                     requiredMessage="La cantidad de horas obligatorio"/>
+                    </p:panelGrid>
+                </div>
+                <br/>
+                <div align="center"> 
+                    <!-- Similiar a los campos, en actionListener se indica que metodo será
+                    ejecutado cuando el boton es pulsado-->
+
+                    <p:commandButton value="Asignar" 
+                                     actionListener="#{personalAsignacion.asignarHoras()}" 
+                                     update=":formAsignacion:junior"/>
+                    <p:commandButton value="Editar" 
+                                     actionListener="#{personalAsignacion.editarhorasAsignadas()}"
+                                     update=":formAsignacion:junior"/>   
+                    <p:commandButton value="Limpiar Campos" 
+                                     actionListener="#{personalAsignacion.limpiarCamposJunior()}" 
+                                     update=":formAsignacion:junior"/>
+                </div>
+                <br/>
+                <p:dataTable var="junior" value="#{personalAsignacion.listaHorasAsignadas}" rows="10"
+                             paginator="true"
+                             paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                             rowsPerPageTemplate="5,10,15"
+                             selection="#{personalAsignacion.ingenierosJuniorSelect}"
+                             selectionMode="single"
+                             rowKey="#{junior.id}"
+                             >
+                    <p:ajax event="rowSelect" 
+                            listener="#{personalAsignacion.seleccionarIngenieroJunior}" 
+                            update=":formAsignacion:junior"/>
+                             
+                    <p:column headerText="Cedula">
+                        <h:outputText value="#{junior.ingenierosCedula.cedula}" />
+                    </p:column>
+                    <p:column headerText="Nombre">
+                        <h:outputText value="#{junior.ingenierosCedula.nombres} #{junior.ingenierosCedula.apellidos}" />
+                    </p:column>
+                    <p:column headerText="Cantidad Horas" style="width:100px">
+                        <h:outputText value="#{junior.horasDia}" />
+                    </p:column>
+                    <f:facet name="paginatorBottomRight">
+                        <p:commandButton type="button" icon="pi pi-cloud-upload" />
+                    </f:facet>
+                </p:dataTable>
+            </p:panel>
+
         </h:form>
     </ui:define>
 </ui:composition>

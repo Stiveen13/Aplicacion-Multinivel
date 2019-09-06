@@ -7,8 +7,6 @@ package vista;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.ejb.EJB;
 import javax.inject.Named;
 import javax.enterprise.context.RequestScoped;
@@ -17,8 +15,12 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import logica.IngenieroLogicaLocal;
 import logica.IngenierosJefeLogicaLocal;
+import logica.IngenierosJuniorLogicaLocal;
+import logica.IngenierosSeniorLogicaLocal;
 import modelo.Ingenieros;
 import modelo.IngenierosJefe;
+import modelo.IngenierosJunior;
+import modelo.IngenierosSenior;
 import org.primefaces.component.inputtext.InputText;
 import org.primefaces.component.selectonemenu.SelectOneMenu;
 import org.primefaces.event.SelectEvent;
@@ -47,27 +49,37 @@ public class PersonalAsignacion {
     private IngenierosJefeLogicaLocal presupuestoAsignadoLogica;
 
     private List<Ingenieros> ingeierosJefe;
-    private List<SelectItem> selectItemJefe;
-    private SelectOneMenu cmbIngenierosJefe;
-    private List<IngenierosJefe> listaPresupuestoAsignado;
+    private List<SelectItem> selectItemJefe; //Aux para mostrar los ingenieros en el cmb
+    private List<IngenierosJefe> listaPresupuestoAsignado; //almacena todos los registros de la bd de la tabla Ingenieros Jefe
+    private IngenierosJefe ingenieroJefeSelect; //Almacena temporalmente el obj IngenieroJefe que ha sido seleccionado por el usuario
     private InputText txtPresupuesto;
-    private IngenierosJefe ingenieroJefeSelect;
+    private SelectOneMenu cmbIngenierosJefe;
+    
 
     /**
      * Variables para la gestion de ingenieros Senior
      */
-    private List<Ingenieros> ingeierosSenior;
-    private List<SelectItem> selectItemSenior;
-    private SelectOneMenu cmbIngenierosSenior;
+    @EJB
+    private IngenierosSeniorLogicaLocal proyectosAsignadosLogica;
+
+    private List<IngenierosSenior> listaProyectosAsignados;
 
     /**
      * Variables para la gestion de ingenieros Junior
      */
+    @EJB
+    private IngenierosJuniorLogicaLocal horasAsignadasLogica;
+
     private List<Ingenieros> ingeierosJunior;
     private List<SelectItem> selectItemJunior;
     private SelectOneMenu cmbIngenierosJunior;
+    private InputText txtHoras;
+    private List<IngenierosJunior> listaHorasAsignadas;
+    private IngenierosJunior ingenierosJuniorSelect;
 
-    /* Funciones para la gestion de los ingenieros Jefe */
+    /**
+     * ************** Funciones para la gestion de los ingenieros Jefe *********
+     */
     public List<Ingenieros> getIngeierosJefe() {
         return ingeierosJefe;
     }
@@ -75,12 +87,18 @@ public class PersonalAsignacion {
     public void setIngeierosJefe(List<Ingenieros> ingeierosJefe) {
         this.ingeierosJefe = ingeierosJefe;
     }
-
+    
+    /** Inicializa los el cmb (Obj selectItem) con los datos almacenados en la BD
+     */
     public List<SelectItem> getSelectItemJefe() {
         selectItemJefe = new ArrayList<SelectItem>();
-        List<Ingenieros> listaIngenieros = ingenierosLogica.ingenierosJefe();
-
+        
+        List<Ingenieros> listaIngenieros = ingenierosLogica.ingenierosJefe(); //Se consultan los ingenieros de clase Jefe
+        
+        // La lista anterior es iterada para mapear cada elemento a tipo selectitem
         for (int i = 0; i < listaIngenieros.size(); i++) {
+            
+            //El objeto selectItem recibe dos parametros: 1. El id - 2. El valor que se va mostrar en el cmb de la interfaz
             SelectItem item = new SelectItem(listaIngenieros.get(i).getCedula(),
                     listaIngenieros.get(i).getCedula() + " "
                     + listaIngenieros.get(i).getNombres() + " "
@@ -127,12 +145,12 @@ public class PersonalAsignacion {
     public void setIngenieroJefeSelect(IngenierosJefe ingenieroJefeSelect) {
         this.ingenieroJefeSelect = ingenieroJefeSelect;
     }
-    
-    public void limpiarCamposJefe(){
+
+    public void limpiarCamposJefe() {
         txtPresupuesto.setValue("");
         cmbIngenierosJefe.setValue("");
     }
-    
+
     public void seleccionarIngenieroJefe(SelectEvent e) {
         ingenieroJefeSelect = (IngenierosJefe) e.getObject();
 
@@ -153,7 +171,7 @@ public class PersonalAsignacion {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
         }
     }
-    
+
     public void editarPresupuesto() {
         try {
             IngenierosJefe nuevaAsignacionPresupuesto = ingenieroJefeSelect;
@@ -168,29 +186,52 @@ public class PersonalAsignacion {
         }
     }
 
-    /* =================================================================== */
-    public List<Ingenieros> getIngeierosSenior() {
-        return ingeierosSenior;
+    /* ===========================Gstions de proyectos asignados=============================== */
+    public List<IngenierosSenior> getListaProyectosAsignados() {
+        listaProyectosAsignados = proyectosAsignadosLogica.listaProyectosAsignados();
+        return listaProyectosAsignados;
     }
 
-    public void setIngeierosSenior(List<Ingenieros> ingeierosSenior) {
-        this.ingeierosSenior = ingeierosSenior;
+    public void setListaProyectosAsignados(List<IngenierosSenior> listaProyectosAsignados) {
+        this.listaProyectosAsignados = listaProyectosAsignados;
     }
 
-    public List<SelectItem> getSelectItemSenior() {
-        return selectItemSenior;
+    /* ==============================Funciones para la gestion de Ing. Junior============================ */
+    public void limpiarCamposJunior() {
+        txtHoras.setValue("");
+        cmbIngenierosJunior.setValue("");
     }
 
-    public void setSelectItemSenior(List<SelectItem> selectItemSenior) {
-        this.selectItemSenior = selectItemSenior;
+    public void seleccionarIngenieroJunior(SelectEvent e) {
+        ingenierosJuniorSelect = (IngenierosJunior) e.getObject();
+
+        txtHoras.setValue(ingenierosJuniorSelect.getHorasDia());
+        cmbIngenierosJunior.setValue(ingenierosJuniorSelect.getIngenierosCedula().getCedula());
     }
 
-    public SelectOneMenu getCmbIngenierosSenior() {
-        return cmbIngenierosSenior;
+    public InputText getTxtHoras() {
+        return txtHoras;
     }
 
-    public void setCmbIngenierosSenior(SelectOneMenu cmbIngenierosSenior) {
-        this.cmbIngenierosSenior = cmbIngenierosSenior;
+    public void setTxtHoras(InputText txtHoras) {
+        this.txtHoras = txtHoras;
+    }
+
+    public List<IngenierosJunior> getListaHorasAsignadas() {
+        listaHorasAsignadas = horasAsignadasLogica.listaHorasAsignadas();
+        return listaHorasAsignadas;
+    }
+
+    public void setListaHorasAsignadas(List<IngenierosJunior> listaHorasAsignadas) {
+        this.listaHorasAsignadas = listaHorasAsignadas;
+    }
+
+    public IngenierosJunior getIngenierosJuniorSelect() {
+        return ingenierosJuniorSelect;
+    }
+
+    public void setIngenierosJuniorSelect(IngenierosJunior ingenierosJuniorSelect) {
+        this.ingenierosJuniorSelect = ingenierosJuniorSelect;
     }
 
     public List<Ingenieros> getIngeierosJunior() {
@@ -202,6 +243,18 @@ public class PersonalAsignacion {
     }
 
     public List<SelectItem> getSelectItemJunior() {
+        selectItemJunior = new ArrayList<SelectItem>();
+
+        List<Ingenieros> listaIngenieros = ingenierosLogica.ingenierosJunior();
+
+        for (int i = 0; i < listaIngenieros.size(); i++) {
+            SelectItem item = new SelectItem(listaIngenieros.get(i).getCedula(),
+                    listaIngenieros.get(i).getCedula() + " "
+                    + listaIngenieros.get(i).getNombres() + " "
+                    + listaIngenieros.get(i).getApellidos());
+            selectItemJunior.add(item);
+        }
+
         return selectItemJunior;
     }
 
@@ -217,4 +270,33 @@ public class PersonalAsignacion {
         this.cmbIngenierosJunior = cmbIngenierosJunior;
     }
 
+    public void asignarHoras() {
+        try {
+            IngenierosJunior nuevaAsignacionHora = new IngenierosJunior();
+            nuevaAsignacionHora.setHorasDia(Integer.parseInt(txtHoras.getValue().toString()));
+            Ingenieros ingenieroObj = ingenierosLogica.buscarxCedula(Integer.parseInt(cmbIngenierosJunior.getValue().toString()));
+            nuevaAsignacionHora.setIngenierosCedula(ingenieroObj);
+
+            horasAsignadasLogica.asignarHoras(nuevaAsignacionHora);
+            limpiarCamposJunior();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "Las horas han sido asignadas"));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
+
+    public void editarhorasAsignadas() {
+        try {
+            IngenierosJunior nuevaAsignacionHora = ingenierosJuniorSelect;
+            nuevaAsignacionHora.setHorasDia(Integer.parseInt(txtHoras.getValue().toString()));
+            Ingenieros ingenieroObj = ingenierosLogica.buscarxCedula(Integer.parseInt(cmbIngenierosJunior.getValue().toString()));
+            nuevaAsignacionHora.setIngenierosCedula(ingenieroObj);
+
+            horasAsignadasLogica.editarAsignacion(nuevaAsignacionHora);
+            limpiarCamposJunior();
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Información: ", "Las horas han sido editado"));
+        } catch (Exception ex) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Información: ", ex.getMessage()));
+        }
+    }
 }
